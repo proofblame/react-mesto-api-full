@@ -16,7 +16,7 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 mongoose
-  .connect('mongodb://localhost:27017/mestodb', {
+  .connect('mongodb://localhost:27017/mestodb7', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -28,13 +28,26 @@ app.use(bodyParser.json());
 
 app.use(requestLogger);
 app.use(errorLogger);
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().uri(),
+    email: Joi.string().email(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+  }),
+}),createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+  }),
+}),login);
 
 // авторизация
 app.use(auth);
 
-app.use('/', usersRouter);
+app.use('/users', usersRouter);
 app.use('/', cardsRouter);
 app.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
