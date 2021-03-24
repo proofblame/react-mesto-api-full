@@ -46,6 +46,6 @@ class Auth {
     }
 }
 
-const auth = new Auth("https://auth.nomoreparties.co");
+const auth = new Auth("http://proofblame.nomoredomains.icu");
 
 export default auth;

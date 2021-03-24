@@ -82,10 +82,10 @@ class Api {
 
 // Получение данных с сервера
 const api = new Api({
-    baseUrl: "https://mesto.nomoreparties.co/v1/cohort-18",
+    baseUrl: "http://proofblame.nomoredomains.icu",
     headers: {
-        authorization: "45380a0b-d1c3-4f21-8b0c-7fe08b9cb145",
         "Content-Type": "application/json",
+        'Authorization': `${localStorage.getItem('jwt')}`,
     },
 });
 

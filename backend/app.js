@@ -26,8 +26,15 @@ mongoose
 
 app.use(bodyParser.json());
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(requestLogger);
 app.use(errorLogger);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
