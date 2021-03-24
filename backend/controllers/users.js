@@ -34,7 +34,7 @@ const getProfile = (req, res) => {
 
 const getMe = (req, res, next) => {
   const token = req.headers.authorization;
-
+  
   const isAuthorized = (token) => {
     try {
       return jwt.verify(token, JWT_SECRET);
