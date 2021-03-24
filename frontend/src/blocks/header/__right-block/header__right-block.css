@@ -1,0 +1,16 @@
+.header__right-block {
+    display: flex;
+    align-self: flex-end;
+}
+
+@media screen and (max-width: 424px) {
+    .header__right-block {
+        flex-direction: column;
+        margin: 0 auto;
+        padding: 0 0 0 0;
+        height: 150px;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
+    }
+}

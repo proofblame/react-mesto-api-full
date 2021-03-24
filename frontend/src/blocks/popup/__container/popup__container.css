@@ -1,0 +1,13 @@
+.popup__container {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(282px, 430px);
+    max-width: 430px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+@media screen and (max-width: 697px) {
+    .popup__container {
+        max-width: 282px;
+    }
+}

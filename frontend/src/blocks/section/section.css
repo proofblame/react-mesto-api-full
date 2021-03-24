@@ -1,0 +1,17 @@
+@import url("./__popup/section__popup.css");
+@import url("./__title/section__title.css");
+@import url("./__subtitle/section__subtitle.css");
+@import url("./__text/section__text.css");
+@import url("./__content/section__content.css");
+@import url("./__profile/section__profile.css");
+@import url("./__footer/section__footer.css");
+
+.section {
+    max-width: 882px;
+}
+
+@media screen and (max-width: 920px) {
+    .section {
+        max-width: calc(100vw - 19px * 2);
+    }
+}

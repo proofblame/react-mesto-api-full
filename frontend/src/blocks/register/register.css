@@ -1,0 +1,13 @@
+@import url("./__heading/register__heading.css");
+@import url("./__form/register__form.css");
+@import url("./__input/register__input.css");
+@import url("./__submit-button/register__submit-button.css");
+@import url(".//__title/register__title.css");
+@import url("./__link/register__link.css");
+
+.register {
+    display: flex;
+    flex-direction: column;
+    max-width: 358px;
+    margin: 0 auto;
+}

@@ -1,0 +1,19 @@
+.header__link {
+    font-family: Inter, sans-serif;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 0;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 22px;
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+@media screen and (max-width: 424px) {
+    .header__link {
+        align-self: center;
+        margin: 0 auto;
+        margin-top: 25px;
+    }
+}

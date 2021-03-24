@@ -1,0 +1,39 @@
+/* -- normalize.css -- */
+@import url("./vendor/normalize.css");
+
+/* -- fonts -- */
+@import url("./vendor/fonts.css");
+
+/* -- Mixes -- */
+@import url("./blocks/section/section.css");
+@import url("./blocks/buttons/buttons.css");
+
+/* -- root -- */
+@import url("./blocks/root/root.css");
+
+/* -- header -- */
+@import url("./blocks/header/header.css");
+
+/* -- profile -- */
+@import url("./blocks/profile/profile.css");
+
+/* -- elements -- */
+@import url("./blocks/elements/elements.css");
+
+/* -- element -- */
+@import url("./blocks/element/element.css");
+
+/* -- popup -- */
+@import url("./blocks/popup/popup.css");
+
+@import url("./blocks/error/error.css");
+
+/* -- register -- */
+@import url("./blocks/register/register.css");
+
+/* --в случае аварии расскомментировать-- */
+/* * {
+    outline-width: 1px;
+    outline-style: solid;
+    outline-color: red;
+} */

@@ -1,0 +1,6 @@
+.element__body {
+    display: flex;
+    margin: 0 15px 31px 21px;
+    justify-content: space-between;
+
+}

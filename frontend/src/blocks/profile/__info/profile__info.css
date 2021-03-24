@@ -1,0 +1,17 @@
+.profile__info {
+    display: grid;
+    grid-template-areas:
+        "profile__author profile__edit-button"
+        "profile__author-status profile__author-status";
+    gap: 0 20px;
+    grid-gap: 0 20px;
+}
+
+@media screen and (max-width: 697px) {
+    .profile__info {
+        margin-bottom: 36px;
+        justify-content: center;
+        gap: 0 8px;
+        grid-gap: 0 8px;
+    }
+}
