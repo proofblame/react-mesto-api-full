@@ -1,12 +1,14 @@
+
 # Logs
 logs
 *.log
-/backend/error.log
-/backend/request.log
 npm-debug.log*
 
 # Dependency directory
 node_modules
+/.pnp
+.pnp.js
+.idea/
 
 # Optional npm cache directory
 .npm
@@ -14,15 +16,14 @@ node_modules
 # Optional REPL history
 .DS_Store
 .idea
-.vscode 
-
-# dependencies
-/.pnp
-.pnp.js
+.env
+*.log
 
 # testing
 /coverage
 
+# production
+/build
 
 # misc
 .DS_Store
