@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -15,6 +15,7 @@ import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
 import MainRoute from './MainRoute';
 import auth from '../utils/auth';
+
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -49,7 +50,11 @@ function App() {
           setCurrentUser({
             email: res.data.email,
             id: res.data._id,
+            name: res.data.name,
+            avatar: res.data.avatar,
+            about: res.data.about
           });
+          
         })
         .catch((e) => console.error(e.message))
         .finally(() => {
