@@ -83,8 +83,8 @@ class Api {
 
 // Получение данных с сервера
 const api = new Api({
-  // baseUrl: 'http://api.proofblame.nomoredomains.icu',
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://api.proofblame.nomoredomains.icu',
+  // baseUrl: 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `${localStorage.getItem('jwt')}`,
