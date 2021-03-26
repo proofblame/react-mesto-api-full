@@ -1,7 +1,8 @@
 # Logs
 logs
 *.log
-backend/*.log
+backend/error.log
+backend/request.log
 npm-debug.log*
 
 # Dependency directory
