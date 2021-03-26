@@ -40,12 +40,12 @@ class Auth {
         return fetch(`${this.baseURL}/users/me`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${jwt}`
+                "Authorization": `${jwt}`
             }
         }).then(this._getResponseData);
     }
 }
 
-const auth = new Auth("http://proofblame.nomoredomains.icu");
+const auth = new Auth("http://localhost:3000");
 
 export default auth;

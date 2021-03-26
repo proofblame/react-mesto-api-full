@@ -17,6 +17,7 @@ function Main({
 
     //  Запись данных карточки в шаблон
     const cardList = cards.map((card) => (
+        
         <Card
             key={card._id}
             card={card}
@@ -25,6 +26,7 @@ function Main({
             onConfirmDelete={onConfirmDelete}
         />
     ));
+
 
     return (
         <main className="content section section__content">

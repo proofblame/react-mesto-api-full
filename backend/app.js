@@ -16,13 +16,25 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 mongoose
-  .connect('mongodb://localhost:27017/mestodb7', {
+  .connect('mongodb://localhost:27017/mestodb20', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
   .then(() => console.log('Connected to DB'));
+
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+    if (req.method === 'OPTIONS') {
+      res.send(200);
+    }
+    next();
+  });
+
 
 app.use(bodyParser.json());
 

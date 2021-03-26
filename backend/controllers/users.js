@@ -101,7 +101,7 @@ const login = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const owner = req.params.userId;
+  const owner = req.user._id;
   return User.findByIdAndUpdate(owner, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
@@ -114,7 +114,8 @@ const updateProfile = (req, res, next) => {
         throw new BadRequestError('Невалидные данные');
       }
     })
-    .catch(next);
+    .catch(next)
+    .finally(() => console.log(req.user));
 };
 
 const updateAvatar = (req, res, next) => {
