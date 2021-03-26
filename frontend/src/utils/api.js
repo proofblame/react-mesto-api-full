@@ -83,11 +83,7 @@ class Api {
 
 // Получение данных с сервера
 const api = new Api({
-<<<<<<< HEAD
   baseUrl: 'https://api.proofblame.nomoredomains.icu',
-=======
-  baseUrl: 'http://api.proofblame.nomoredomains.icu',
->>>>>>> 29819b5175a4165240026da7b418380a2c7b3164
   // baseUrl: 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',

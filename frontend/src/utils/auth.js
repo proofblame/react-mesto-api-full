@@ -46,11 +46,7 @@ class Auth {
     }
 }
 
-<<<<<<< HEAD
 const auth = new Auth("https://api.proofblame.nomoredomains.icu");
-=======
-const auth = new Auth("http://api.proofblame.nomoredomains.icu");
->>>>>>> 29819b5175a4165240026da7b418380a2c7b3164
 // const auth = new Auth("http://localhost:3000");
 
 export default auth;
