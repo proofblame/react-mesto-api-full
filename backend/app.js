@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
@@ -14,6 +15,7 @@ const NotFoundError = require('./errors/not-found-err');
 const app = express();
 
 const { PORT = 3000 } = process.env;
+app.use(cors());
 
 mongoose
   .connect('mongodb://localhost:27017/mestodb20', {

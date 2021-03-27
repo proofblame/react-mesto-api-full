@@ -11,10 +11,13 @@ class Api {
     }).then((res) => this._addResult(res));
   }
   // Добавить новую карточку
-  addNewCard(name, link) {
+  addNewCard(name, link, jwt) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${jwt}`,
+      },
       body: JSON.stringify({
         name: name,
         link: link,
@@ -23,40 +26,55 @@ class Api {
   }
 
   // Обновляем статус лайков карточки
-  changeLikeCardStatus(cardId, noIsLiked) {
+  changeLikeCardStatus(cardId, noIsLiked, jwt) {
     if (noIsLiked) {
-      return fetch(`${this._url}/cards/${cardId}/likes`, {
+      return fetch(`${this._url}/cards/likes/${cardId}`, {
         method: 'PUT',
-        headers: this._headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${jwt}`,
+        },
       }).then((res) => this._addResult(res));
     } else {
-      return fetch(`${this._url}/cards/${cardId}/likes`, {
+      return fetch(`${this._url}/cards/likes/${cardId}`, {
         method: 'DELETE',
-        headers: this._headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${jwt}`,
+        },
       }).then((res) => this._addResult(res));
     }
   }
 
   // Удаление карточки
-  deleteCard(cardId) {
+  deleteCard(cardId, jwt) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${jwt}`,
+      },
     }).then((res) => this._addResult(res));
   }
   // Получить данные пользователя
-  getUserInfo() {
+  getUserInfo(jwt) {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${jwt}`,
+      },
     })
     .then((res) => this._addResult(res))
   }
   // Редактирование данных пользователя
-  setUserInfo(name, about) {
+  setUserInfo(name, about, jwt) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${jwt}`,
+      },
       body: JSON.stringify({
         name: name,
         about: about,
@@ -64,10 +82,13 @@ class Api {
     }).then((res) => this._addResult(res));
   }
   // Редактирование аватара пользователя
-  setUserAvatar(url) {
+  setUserAvatar(url, jwt) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${jwt}`,
+      },
       body: JSON.stringify({
         avatar: url,
       }),

@@ -38,6 +38,12 @@ function App() {
   const [descriptionValid, setDescriptionValid] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const history = useHistory();
+
+useEffect(() => {
+  checkToken();
+}, [])
+
 
   // Проверка токена
   function checkToken() {
@@ -46,15 +52,16 @@ function App() {
       auth
         .getUserData(jwt)
         .then((res) => {
-          setLoggedIn(true);
-          setCurrentUser({
-            email: res.data.email,
-            id: res.data._id,
-            name: res.data.name,
-            avatar: res.data.avatar,
-            about: res.data.about
-          });
-          
+          if (res) {
+            setLoggedIn(true);
+            history.push('/');
+            setCurrentUser({
+              email: res.data.email,
+              name: res.data.name,
+              avatar: res.data.avatar,
+              about: res.data.about
+            })
+          }
         })
         .catch((e) => console.error(e.message))
         .finally(() => {
@@ -99,15 +106,22 @@ function App() {
 
   // Получение данных пользователя, карточек с сервера
   useEffect(() => {
-    checkToken();
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .getUserInfo()
+      .getUserInfo(jwt)
       .then((user) => {
         setCurrentUser(user.data);
       })
       .catch((err) => {
         console.log(err);
       });
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
       .getInitialCards()
       .then((cards) => {
@@ -116,6 +130,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }, []);
 
   //  Закрытие попапа по Esc и клику на оверлей
@@ -146,10 +161,10 @@ function App() {
   //  Поставить/снять лайк
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i === currentUser._id);
-    console.log(card)
-
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -157,6 +172,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }
 
   //  Удалить карточку
@@ -165,8 +181,10 @@ function App() {
       ...valueInput,
       confirm: 'Удаление...',
     });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, jwt)
       .then(() => {
         const newCards = cards.filter((c) => c._id !== card._id);
         setCards(newCards);
@@ -181,6 +199,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }
 
   //  Добавить карточку
@@ -189,8 +208,10 @@ function App() {
       ...valueInput,
       submit: 'Сохранение...',
     });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .addNewCard(name, link)
+      .addNewCard(name, link, jwt)
       .then((card) => {
         setCards([card.data, ...cards]);
       })
@@ -204,6 +225,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }
   //  Обновить аватар
   function handleUpdateAvatar({ avatar }) {
@@ -211,8 +233,10 @@ function App() {
       ...valueInput,
       submit: 'Сохранение...',
     });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .setUserAvatar(avatar)
+      .setUserAvatar(avatar, jwt)
       .then(() => {
         setCurrentUser({
           ...currentUser,
@@ -229,6 +253,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }
   //  Обновить данные пользователя
   function handleUpdateUser({ name, about }) {
@@ -236,8 +261,10 @@ function App() {
       ...valueInput,
       submit: 'Сохранение...',
     });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
     api
-      .setUserInfo(name, about)
+      .setUserInfo(name, about, jwt)
       .then(() => {
         setCurrentUser({
           ...currentUser,
@@ -255,6 +282,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
   }
 
   //  Присвоить значения карточке
@@ -300,13 +328,15 @@ function App() {
   function handleLogin(email, password) {
     return auth.login(email, password).then((res) => {
       localStorage.setItem('jwt', res.token);
+      setLoggedIn(true)
     });
   }
 
   function handleSignout() {
-    localStorage.clear();
+    localStorage.removeItem('jwt');
     setLoggedIn(false);
     setCurrentUser({_id: null, avatar: ''})
+    history.push('/login');
   }
 
   return (
