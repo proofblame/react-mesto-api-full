@@ -290,7 +290,7 @@ function App() {
   //  Открыть попап редактирования аватара
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
-    setNameValid(false);
+    setNameValid(true);
   }
   //  Открыть попап подтверждения удаления карточки
   function handleDeleteButtonClick(card) {
