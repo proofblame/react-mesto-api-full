@@ -5,7 +5,7 @@
 
 Доменное имя frontend - https://proofblame.nomoredomains.icu
 Доменное имя backend - https://api.proofblame.nomoredomains.icu
-Ip адрес сервера - 178.154.213.106
+Ip адрес сервера - 178.154.211.82
 
 
 
