@@ -1,11 +1,11 @@
 .buttons {
-    background-color: transparent;
-    border: 1px solid #fff;
-    cursor: pointer;
-    padding: 0;
-    box-sizing: border-box;
+  background-color: transparent;
+  border: 1px solid #fff;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .buttons:hover {
-    opacity: 0.6;
+  opacity: 0.6;
 }
