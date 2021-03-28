@@ -18,7 +18,7 @@ const { PORT = 3000 } = process.env;
 app.use(cors());
 
 mongoose
-  .connect('mongodb://localhost:27017/mestodb20', {
+  .connect('mongodb://localhost:27017/mestodb001', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
