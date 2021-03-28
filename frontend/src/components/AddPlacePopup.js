@@ -9,7 +9,7 @@ function AddPlacePopup({
     nameError,
     descriptionError,
     handleChangeName,
-    handleChangeDescription,
+    handleChangeLinks,
     formValid
 }) {
     const [name, setName] = useState();
@@ -70,7 +70,7 @@ function AddPlacePopup({
                 required
                 autoComplete="off"
                 onChange={(event) => {
-                    handleChangeDescription(event);
+                    handleChangeLinks(event);
                     setLink(event.target.value);
                 }}
             />

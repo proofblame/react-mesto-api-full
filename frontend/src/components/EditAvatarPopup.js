@@ -7,7 +7,7 @@ function EditAvatarPopup({
     onUpdateAvatar,
     valueInput,
     descriptionError,
-    handleChangeDescription,
+    handleChangeLinks,
     formValid
 }) {
     const avatarRef = useRef();
@@ -41,7 +41,7 @@ function EditAvatarPopup({
                 autoComplete="off"
                 ref={avatarRef}
                 onChange={(event) => {
-                    handleChangeDescription(event);
+                    handleChangeLinks(event);
                 }}
             />
             <span className="error" id="link-error">{descriptionError}</span>

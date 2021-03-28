@@ -1,11 +1,16 @@
 .register__input {
-    width: 100%;
-    font-size: 14px;
-    padding-bottom: 13px;
-    border: none;
-    border-bottom: 1px solid #ffffff;
-    background: none;
-    color: #ffffff;
-    outline: none;
-    margin-bottom: 30px;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  width: 100%;
+  font-size: 14px;
+  padding-bottom: 13px;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  background: none;
+  color: #ffffff;
+  outline: none;
+  margin-bottom: 30px;
 }

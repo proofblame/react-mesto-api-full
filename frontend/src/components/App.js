@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {Route, Switch, useHistory} from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -7,7 +7,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import ConfirmPopup from './ConfirmPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
@@ -15,7 +15,6 @@ import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
 import MainRoute from './MainRoute';
 import auth from '../utils/auth';
-
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -40,30 +39,30 @@ function App() {
   const [isChecked, setIsChecked] = useState(false);
   const history = useHistory();
 
-useEffect(() => {
-  checkToken();
-}, [])
+  // Получение данных о пользователе и карточках после логина
+  useEffect(() => {
+    checkToken();
+  }, []);
 
-
-  // Проверка токена
   function checkToken() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-      auth
-        .getUserData(jwt)
-        .then((res) => {
-          if (res) {
-            setLoggedIn(true);
-            history.push('/');
-            setCurrentUser({
-              email: res.data.email,
-              name: res.data.name,
-              avatar: res.data.avatar,
-              about: res.data.about
-            })
-          }
+      api
+        .getUserInfo(jwt)
+        .then(user => {
+          setLoggedIn(true);
+          history.push('/');
+          setCurrentUser(user.data);
         })
-        .catch((e) => console.error(e.message))
+        .catch(e => console.error(e.message));
+      api
+        .getInitialCards()
+        .then(cards => {
+          setCards(cards);
+        })
+        .catch(err => {
+          console.log(err);
+        })
         .finally(() => {
           setIsChecked(true);
         });
@@ -82,7 +81,8 @@ useEffect(() => {
       setNameValid(false);
     }
   }
-  // Валидация изменения описания и ссылок
+
+  // Валидация изменения описания профиля
   function handleChangeDescription(event) {
     if (event.target.validity.valid) {
       setDescriptionError('');
@@ -93,6 +93,20 @@ useEffect(() => {
     }
   }
 
+  // Валидация изменения ссылок
+  function handleChangeLinks(event) {
+    const checkexp = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi.test(
+      event.target.value
+    );
+    if (event.target.validity.valid && checkexp) {
+      setDescriptionError('');
+      setDescriptionValid(true);
+    } else {
+      setDescriptionError(event.target.validationMessage || 'Некорректная ссылка');
+      setDescriptionValid(false);
+    }
+  }
+  // Изначальная валидация формы
   useEffect(() => {
     if (!nameValid || !descriptionValid) {
       setFormValid(false);
@@ -103,35 +117,6 @@ useEffect(() => {
       setFormValid(false);
     };
   }, [nameValid, descriptionValid]);
-
-  // Получение данных пользователя, карточек с сервера
-  useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-    api
-      .getUserInfo(jwt)
-      .then((user) => {
-        setCurrentUser(user.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-    api
-      .getInitialCards()
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, []);
 
   //  Закрытие попапа по Esc и клику на оверлей
   useEffect(() => {
@@ -160,18 +145,18 @@ useEffect(() => {
 
   //  Поставить/снять лайк
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-    api
-      .changeLikeCardStatus(card._id, !isLiked, jwt)
-      .then((newCard) => {
-        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-        setCards(newCards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      api
+        .changeLikeCardStatus(card._id, !isLiked, jwt)
+        .then(newCard => {
+          const newCards = cards.map(c => (c._id === card._id ? newCard : c));
+          setCards(newCards);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
@@ -183,105 +168,105 @@ useEffect(() => {
     });
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-    api
-      .deleteCard(card._id, jwt)
-      .then(() => {
-        const newCards = cards.filter((c) => c._id !== card._id);
-        setCards(newCards);
-      })
-      .then(() => {
-        closeAllPopups();
-        setValueInput({
-          ...valueInput,
-          confirm: 'Да',
+      api
+        .deleteCard(card._id, jwt)
+        .then(() => {
+          const newCards = cards.filter(c => c._id !== card._id);
+          setCards(newCards);
+        })
+        .then(() => {
+          closeAllPopups();
+          setValueInput({
+            ...valueInput,
+            confirm: 'Да',
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
   }
 
   //  Добавить карточку
-  function handleAddPlaceSubmit({ name, link }) {
+  function handleAddPlaceSubmit({name, link}) {
     setValueInput({
       ...valueInput,
       submit: 'Сохранение...',
     });
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-    api
-      .addNewCard(name, link, jwt)
-      .then((card) => {
-        setCards([card.data, ...cards]);
-      })
-      .then(() => {
-        setValueInput({
-          ...valueInput,
-          submit: 'Сохранить',
+      api
+        .addNewCard(name, link, jwt)
+        .then(card => {
+          setCards([card.data, ...cards]);
+        })
+        .then(() => {
+          setValueInput({
+            ...valueInput,
+            submit: 'Сохранить',
+          });
+          closeAllPopups();
+        })
+        .catch(err => {
+          console.log(err);
         });
-        closeAllPopups();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
   }
   //  Обновить аватар
-  function handleUpdateAvatar({ avatar }) {
+  function handleUpdateAvatar({avatar}) {
     setValueInput({
       ...valueInput,
       submit: 'Сохранение...',
     });
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-    api
-      .setUserAvatar(avatar, jwt)
-      .then(() => {
-        setCurrentUser({
-          ...currentUser,
-          avatar: avatar,
+      api
+        .setUserAvatar(avatar, jwt)
+        .then(() => {
+          setCurrentUser({
+            ...currentUser,
+            avatar: avatar,
+          });
+        })
+        .then(() => {
+          closeAllPopups();
+          setValueInput({
+            ...valueInput,
+            submit: 'Сохранить',
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-      })
-      .then(() => {
-        closeAllPopups();
-        setValueInput({
-          ...valueInput,
-          submit: 'Сохранить',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
   }
   //  Обновить данные пользователя
-  function handleUpdateUser({ name, about }) {
+  function handleUpdateUser({name, about}) {
     setValueInput({
       ...valueInput,
       submit: 'Сохранение...',
     });
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-    api
-      .setUserInfo(name, about, jwt)
-      .then(() => {
-        setCurrentUser({
-          ...currentUser,
-          name: name,
-          about: about,
+      api
+        .setUserInfo(name, about, jwt)
+        .then(() => {
+          setCurrentUser({
+            ...currentUser,
+            name: name,
+            about: about,
+          });
+        })
+        .then(() => {
+          closeAllPopups();
+          setValueInput({
+            ...valueInput,
+            submit: 'Сохранить',
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-      })
-      .then(() => {
-        closeAllPopups();
-        setValueInput({
-          ...valueInput,
-          submit: 'Сохранить',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
   }
 
@@ -293,15 +278,19 @@ useEffect(() => {
   //  Открыть попап редактирования профиля
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
+    setNameValid(true);
+    setDescriptionValid(true);
   }
   //  Открыть попап добавдения новой карточки
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
+    setNameValid(false);
+    setDescriptionValid(false);
   }
   //  Открыть попап редактирования аватара
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
-    setNameValid(true);
+    setNameValid(false);
   }
   //  Открыть попап подтверждения удаления карточки
   function handleDeleteButtonClick(card) {
@@ -317,8 +306,8 @@ useEffect(() => {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(false);
     setIsConfirmPopupOpen(false);
-    setNameValid(false);
-    setDescriptionValid(false);
+    setDescriptionError('');
+    setNameError('');
   }
 
   function handleRegister(email, password) {
@@ -326,17 +315,15 @@ useEffect(() => {
   }
 
   function handleLogin(email, password) {
-    return auth.login(email, password).then((res) => {
+    return auth.login(email, password).then(res => {
       localStorage.setItem('jwt', res.token);
-      setLoggedIn(true)
     });
   }
 
   function handleSignout() {
-    localStorage.removeItem('jwt');
     setLoggedIn(false);
-    setCurrentUser({_id: null, avatar: ''})
-    history.push('/login');
+    setCurrentUser({_id: null, avatar: ''});
+    localStorage.removeItem('jwt');
   }
 
   return (
@@ -345,27 +332,27 @@ useEffect(() => {
         <Header loggedIn={loggedIn} email={currentUser.email} onSignOut={handleSignout} />
         <MainRoute isChecked={isChecked}>
           <Switch>
-            <Route path="/sign-in">
-              <Login onLogin={handleLogin} loggedIn={loggedIn} checkToken={checkToken} />
-            </Route>
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              exact
+              path="/"
+              component={Main}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onConfirmDelete={handleDeleteButtonClick}
+              handleChangeName={handleChangeName}
+            />
+
             <Route path="/sign-up">
               <Register onRegister={handleRegister} loggedIn={loggedIn} />
             </Route>
-            
-              <ProtectedRoute
-                loggedIn={loggedIn}
-                path="/"
-                component={Main}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onConfirmDelete={handleDeleteButtonClick}
-                handleChangeName={handleChangeName}
-              />
-
+            <Route path="/sign-in">
+              <Login onLogin={handleLogin} loggedIn={loggedIn} checkToken={checkToken} />
+            </Route>
           </Switch>
         </MainRoute>
         <Footer />
@@ -385,7 +372,7 @@ useEffect(() => {
           nameError={nameError}
           descriptionError={descriptionError}
           handleChangeName={handleChangeName}
-          handleChangeDescription={handleChangeDescription}
+          handleChangeLinks={handleChangeLinks}
           formValid={formValid}
         />
         <EditAvatarPopup
@@ -394,7 +381,7 @@ useEffect(() => {
           onUpdateAvatar={handleUpdateAvatar}
           valueInput={valueInput.submit}
           descriptionError={descriptionError}
-          handleChangeDescription={handleChangeDescription}
+          handleChangeLinks={handleChangeLinks}
           formValid={formValid}
         />
         <EditProfilePopup
