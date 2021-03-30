@@ -4,11 +4,11 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { errors, celebrate, Joi } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const { errors, celebrate, Joi } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
 
@@ -27,17 +27,15 @@ mongoose
   })
   .then(() => console.log('Connected to DB'));
 
-
-  // app.use((req, res, next) => {
-  //   res.header('Access-Control-Allow-Origin', '*');
-  //   res.header('Access-Control-Allow-Headers', '*');
-  //   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  //   if (req.method === 'OPTIONS') {
-  //     res.send(200);
-  //   }
-  //   next();
-  // });
-
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+//   if (req.method === 'OPTIONS') {
+//     res.send(200);
+//   }
+//   next();
+// });
 
 app.use(bodyParser.json());
 
@@ -54,17 +52,17 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().regex(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/),
     email: Joi.string().email(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
   }),
-}),createUser);
+}), createUser);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email(),
     password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
   }),
-}),login);
+}), login);
 
 // авторизация
 app.use(auth);

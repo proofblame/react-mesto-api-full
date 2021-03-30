@@ -35,7 +35,6 @@ function App() {
   const [formValid, setFormValid] = useState(false);
   const [nameValid, setNameValid] = useState(false);
   const [descriptionValid, setDescriptionValid] = useState(false);
-  const [linkValid, setLinkValid] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const history = useHistory();

@@ -6,17 +6,21 @@ const {
 
 router.get('/', getUsers);
 router.get('/me', getMe);
-router.get('/:userId', getProfile);
+router.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).required().hex(),
+  }),
+}), getProfile);
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
-}),updateProfile);
+}), updateProfile);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().required().regex(/(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/),
   }),
-}),updateAvatar);
+}), updateAvatar);
 
 module.exports = router;
