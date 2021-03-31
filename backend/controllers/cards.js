@@ -3,10 +3,10 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 
-const getCards = (req, res, next) =>
-  Card.find({}).sort({"createdAt":-1})
-    .then((cards) => res.status(200).send(cards))
-    .catch(next);
+const getCards = (req, res, next) => Card.find({})
+  .sort({ createdAt: -1 })
+  .then((cards) => res.status(200).send(cards))
+  .catch(next);
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;

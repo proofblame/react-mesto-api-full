@@ -16,7 +16,7 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getProfile = (req, res) => {
+const getProfile = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -35,7 +35,7 @@ const getProfile = (req, res) => {
 const getMe = (req, res, next) => {
   const token = req.headers.authorization;
 
-  const isAuthorized = (token) => {
+  const isAuthorized = () => {
     try {
       return jwt.verify(token, JWT_SECRET);
     } catch (err) {
@@ -114,8 +114,7 @@ const updateProfile = (req, res, next) => {
         throw new BadRequestError('Невалидные данные');
       }
     })
-    .catch(next)
-    .finally(() => console.log(req.user));
+    .catch(next);
 };
 
 const updateAvatar = (req, res, next) => {
