@@ -4,10 +4,13 @@ class Api {
     this._headers = headers;
   }
   // Получить начальные карточки
-  getInitialCards() {
+  getInitialCards(jwt) {
     return fetch(`${this._url}/cards`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+      },
     }).then((res) => this._addResult(res));
   }
   // Добавить новую карточку
@@ -16,7 +19,7 @@ class Api {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${jwt}`,
+        'Authorization': `Bearer ${jwt}`,
       },
       body: JSON.stringify({
         name: name,
@@ -32,7 +35,7 @@ class Api {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${jwt}`,
+          'Authorization': `Bearer ${jwt}`,
         },
       }).then((res) => this._addResult(res));
     } else {
@@ -40,7 +43,7 @@ class Api {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${jwt}`,
+          'Authorization': `Bearer ${jwt}`,
         },
       }).then((res) => this._addResult(res));
     }
@@ -52,7 +55,7 @@ class Api {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${jwt}`,
+        'Authorization': `Bearer ${jwt}`,
       },
     }).then((res) => this._addResult(res));
   }
@@ -62,7 +65,7 @@ class Api {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${jwt}`,
+        'Authorization': `Bearer ${jwt}`,
       },
     })
     .then((res) => this._addResult(res))
@@ -73,7 +76,7 @@ class Api {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${jwt}`,
+        'Authorization': `Bearer ${jwt}`,
       },
       body: JSON.stringify({
         name: name,
@@ -87,7 +90,7 @@ class Api {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${jwt}`,
+        'Authorization': `Bearer ${jwt}`,
       },
       body: JSON.stringify({
         avatar: url,
@@ -108,7 +111,7 @@ const api = new Api({
   // baseUrl: 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `${localStorage.getItem('jwt')}`,
+    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
   },
 });
 

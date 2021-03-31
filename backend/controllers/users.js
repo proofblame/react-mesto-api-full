@@ -33,7 +33,12 @@ const getProfile = (req, res, next) => {
 };
 
 const getMe = (req, res, next) => {
-  const token = req.headers.authorization;
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return res.status(401).send({ message: 'Нет доступа' });
+  }
+
+  const token = authorization.replace('Bearer ', '');
 
   const isAuthorized = () => {
     try {
@@ -91,7 +96,7 @@ const login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      return res.send({ token });
+      return res.send({ jwt: token });
     })
     .catch(() => {
       throw new UnauthorizedError('Не удалось авторизироваться');

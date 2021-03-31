@@ -56,7 +56,7 @@ function App() {
         })
         .catch(e => console.error(e.message));
       api
-        .getInitialCards()
+        .getInitialCards(jwt)
         .then(cards => {
           setCards(cards);
         })
@@ -317,7 +317,7 @@ function App() {
 
   function handleLogin(email, password) {
     return auth.login(email, password).then(res => {
-      localStorage.setItem('jwt', res.token);
+      localStorage.setItem('jwt', res.jwt);
     });
   }
 
