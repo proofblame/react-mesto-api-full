@@ -22,12 +22,13 @@ const getProfile = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      return res.status(200).send(user);
+      return res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Невалидный id');
       }
+      throw err;
     })
     .catch(next);
 };
@@ -55,7 +56,7 @@ const getMe = (req, res, next) => {
   return User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        next(new NotFoundError('Нет пользователя с таким id'));
       }
       return res.status(200).send({ data: user });
     })
@@ -110,7 +111,7 @@ const updateProfile = (req, res, next) => {
   return User.findByIdAndUpdate(owner, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        next(new NotFoundError('Нет пользователя с таким id'));
       }
       res.send(user);
     })
@@ -129,7 +130,7 @@ const updateAvatar = (req, res, next) => {
   return User.findByIdAndUpdate(owner, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        next(new NotFoundError('Нет пользователя с таким id'));
       }
       res.send(user);
     })

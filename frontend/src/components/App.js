@@ -95,10 +95,10 @@ function App() {
 
   // Валидация изменения ссылок
   function handleChangeLinks(event) {
-    const checkexp = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi.test(
-      event.target.value
-    );
-    if (event.target.validity.valid && checkexp) {
+    // const checkexp = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/gi.test(
+    //   event.target.value
+    // );
+    if (event.target.validity.valid) {
       setDescriptionError('');
       setDescriptionValid(true);
     } else {

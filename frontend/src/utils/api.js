@@ -31,7 +31,7 @@ class Api {
   // Обновляем статус лайков карточки
   changeLikeCardStatus(cardId, noIsLiked, jwt) {
     if (noIsLiked) {
-      return fetch(`${this._url}/cards/likes/${cardId}`, {
+      return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ class Api {
         },
       }).then((res) => this._addResult(res));
     } else {
-      return fetch(`${this._url}/cards/likes/${cardId}`, {
+      return fetch(`${this._url}/cards/${cardId}/likes`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

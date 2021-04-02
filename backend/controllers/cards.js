@@ -2,6 +2,7 @@ const Card = require('../models/card');
 
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 const getCards = (req, res, next) => Card.find({})
   .sort({ createdAt: -1 })
@@ -22,17 +23,23 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findOneAndDelete({ owner: req.user._id, _id: req.params.cardId })
+  const owner = req.user._id;
+  Card
+    .findOne({ _id: req.params.cardId })
+    .orFail(() => new NotFoundError('Карточка с таким id не найдена'))
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с таким id не найдена');
+      if (!card.owner.equals(owner)) {
+        next(new ForbiddenError('Нельзя удалить чужую карточку'));
+      } else {
+        Card.deleteOne(card)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       }
-      return res.status(200).send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Данные не прошли валидацию');
+        next(new BadRequestError('Данные не прошли валидацию'));
       }
+      throw err;
     })
     .catch(next);
 };
@@ -50,6 +57,7 @@ const likeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Данные не прошли валидацию');
       }
+      throw err;
     })
     .catch(next);
 };
@@ -67,6 +75,7 @@ const dislikeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Данные не прошли валидацию');
       }
+      throw err;
     })
     .catch(next);
 };
